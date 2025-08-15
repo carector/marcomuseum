@@ -12,7 +12,7 @@ import {
 	Image,
 } from '@chakra-ui/react';
 import { Provider } from './components/ui/provider';
-import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
+//import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
 
 import { type Firestore, doc, getDoc } from 'firebase/firestore';
 
@@ -120,8 +120,8 @@ function App({ db }: { db: Firestore }) {
 								setImgIndex(data[newYear].images.length - 1);
 							} else setImgIndex(imgIndex - 1);
 						}}
-					>
-						<ChevronLeftIcon />
+					>Left
+						{/* <ChevronLeftIcon /> */}
 					</Button>
 					<Flex gap="8" direction="column">
 						<Box p="4">
@@ -150,7 +150,8 @@ function App({ db }: { db: Firestore }) {
 							} else setImgIndex(imgIndex + 1);
 						}}
 					>
-						<ChevronRightIcon />
+						Right 
+						{/* <ChevronRightIcon /> */}
 					</Button>
 				</Flex>
 			)}
@@ -159,7 +160,7 @@ function App({ db }: { db: Firestore }) {
 					<HStack>
 						<h1>All Marcos</h1>
 						<Button onClick={() => setGridOpen(false)}>
-							<CloseIcon />
+							Close {/* <CloseIcon /> */}
 						</Button>
 					</HStack>
 					<Flex gap="8" direction="column">
