@@ -97,17 +97,23 @@ const data = [
 
 // import ChakraCarousel from './components/custom/ChakraCarousel';
 
+function toDateTime(secs: number) {
+	var date = new Date(1970, 0, 1); // Epoch
+	date.setSeconds(secs);
+	return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
+}
+
 function App({ db }: { db: Firestore }) {
 	const [gridOpen, setGridOpen] = useState(false);
 	//const [yearIndex, setYearIndex] = useState(0);
 	const [imgIndex, setImgIndex] = useState(0);
-	const [imgData, setImgData] = useState<ReadonlyArray<any>>([]);		// TODO create marco metadata interface
+	const [imgData, setImgData] = useState<ReadonlyArray<any>>([]); // TODO create marco metadata interface
 
 	// Firebase DB setup
 	useEffect(() => {
 		async function init() {
 			const docs = await getDocs(collection(db, 'marcos'));
-			let list: Array<any> = []
+			let list: Array<any> = [];
 			docs.forEach((doc) => list.push(doc.data()));
 			console.log(list);
 			setImgData(list);
@@ -119,8 +125,8 @@ function App({ db }: { db: Firestore }) {
 		init();
 	}, []);
 
-	if(imgData.length == 0) {
-		return <h1>We outta tires</h1>
+	if (imgData.length == 0) {
+		return <h1>We outta tires</h1>;
 	}
 
 	return (
@@ -129,7 +135,9 @@ function App({ db }: { db: Firestore }) {
 				<Flex gap="24">
 					<Button
 						onClick={() => {
-							setImgIndex((imgIndex - 1 + imgData.length) % imgData.length);
+							setImgIndex(
+								(imgIndex - 1 + imgData.length) % imgData.length
+							);
 						}}
 					>
 						Left
@@ -138,7 +146,9 @@ function App({ db }: { db: Firestore }) {
 					<p>{imgIndex}</p>
 					<Flex gap="8" direction="column">
 						<Box p="4">
-							<h1>{imgData[imgIndex].date.seconds}</h1>
+							<h1>
+								{toDateTime(imgData[imgIndex].date.seconds)}
+							</h1>
 						</Box>
 						<Image
 							fit="contain"
