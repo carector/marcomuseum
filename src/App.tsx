@@ -115,6 +115,9 @@ function App({ db }: { db: Firestore }) {
 			const docs = await getDocs(collection(db, 'marcos'));
 			let list: Array<any> = [];
 			docs.forEach((doc) => list.push(doc.data()));
+			list.sort(function(a, b) {
+				return a.date.seconds > b.date.seconds ? 1 : 0;
+			});
 			console.log(list);
 			setImgData(list);
 			// if (docs.size != 0) {
