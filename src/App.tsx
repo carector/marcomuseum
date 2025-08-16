@@ -14,7 +14,13 @@ import {
 import { Provider } from './components/ui/provider';
 //import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
 
-import { type Firestore, doc, getDoc } from 'firebase/firestore';
+import {
+	type Firestore,
+	doc,
+	collection,
+	getDoc,
+	getDocs,
+} from 'firebase/firestore';
 
 const data = [
 	{
@@ -93,19 +99,29 @@ const data = [
 
 function App({ db }: { db: Firestore }) {
 	const [gridOpen, setGridOpen] = useState(false);
-	const [yearIndex, setYearIndex] = useState(0);
+	//const [yearIndex, setYearIndex] = useState(0);
 	const [imgIndex, setImgIndex] = useState(0);
+	const [imgData, setImgData] = useState<ReadonlyArray<any>>([]);		// TODO create marco metadata interface
 
 	// Firebase DB setup
 	useEffect(() => {
 		async function init() {
-			const docRef = doc(db, 'marcos', 'fZ9WXXFQLigAg7jtEe1F')
-			const doc2 = await getDoc(docRef);
-			if(doc2.exists())
-				console.log(doc2.data());
+			const docs = await getDocs(collection(db, 'marcos'));
+			let list: Array<any> = []
+			docs.forEach((doc) => list.push(doc.data()));
+			console.log(list);
+			setImgData(list);
+			// if (docs.size != 0) {
+			// 	console.log(docs.toJSON());
+			// 	setImgData(docs.toJSON());
+			// } else console.log('Error!');
 		}
 		init();
 	}, []);
+
+	if(imgData.length == 0) {
+		return <h1>We outta tires</h1>
+	}
 
 	return (
 		<Provider>
@@ -113,30 +129,24 @@ function App({ db }: { db: Firestore }) {
 				<Flex gap="24">
 					<Button
 						onClick={() => {
-							if (imgIndex == 0) {
-								const newYear =
-									(yearIndex - 1 + data.length) % data.length;
-								setYearIndex(newYear);
-								setImgIndex(data[newYear].images.length - 1);
-							} else setImgIndex(imgIndex - 1);
+							setImgIndex((imgIndex - 1 + imgData.length) % imgData.length);
 						}}
-					>Left
+					>
+						Left
 						{/* <ChevronLeftIcon /> */}
 					</Button>
+					<p>{imgIndex}</p>
 					<Flex gap="8" direction="column">
 						<Box p="4">
-							<h1>{data[yearIndex].images[imgIndex].date}</h1>
-							<p>
-								{yearIndex} {imgIndex}
-							</p>
+							<h1>{imgData[imgIndex].date.seconds}</h1>
 						</Box>
 						<Image
 							fit="contain"
 							h="500px"
-							src={data[yearIndex].images[imgIndex].url}
+							src={imgData[imgIndex].url}
 						></Image>
 						<Box p="4">
-							<h4>{data[yearIndex].images[imgIndex].comment}</h4>
+							<h4>{imgData[imgIndex].comment}</h4>
 						</Box>
 						<Button onClick={() => setGridOpen(true)}>
 							View grid
@@ -144,13 +154,10 @@ function App({ db }: { db: Firestore }) {
 					</Flex>
 					<Button
 						onClick={() => {
-							if (imgIndex == data[yearIndex].images.length - 1) {
-								setImgIndex(0);
-								setYearIndex((yearIndex + 1) % data.length);
-							} else setImgIndex(imgIndex + 1);
+							setImgIndex((imgIndex + 1) % imgData.length);
 						}}
 					>
-						Right 
+						Right
 						{/* <ChevronRightIcon /> */}
 					</Button>
 				</Flex>
