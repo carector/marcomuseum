@@ -1,3 +1,6 @@
+import { Scene, Color } from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { useEffect, useState } from 'react';
 import './App.css';
 import {
@@ -96,6 +99,42 @@ const data = [
 	},
 ];
 
+// Instantiate a loader
+export function CreateScene() {
+	const scene = new Scene();
+	scene.background = new Color(0xbfe3dd);
+	const loader = new GLTFLoader();
+
+	// Optional: Provide a DRACOLoader instance to decode compressed mesh data
+	const dracoLoader = new DRACOLoader();
+	dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
+	loader.setDRACOLoader(dracoLoader);
+
+	// Load a glTF resource
+	loader.load(
+		// resource URL
+		'models/Pyramid.glb',
+		// called when the resource is loaded
+		function (gltf: any) {
+			scene.add(gltf.scene);
+
+			gltf.animations; // Array<THREE.AnimationClip>
+			gltf.scene; // THREE.Group
+			gltf.scenes; // Array<THREE.Group>
+			gltf.cameras; // Array<THREE.Camera>
+			gltf.asset; // Object
+		},
+		// called while loading is progressing
+		function (xhr: any) {
+			console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+		},
+		// called when loading has errors
+		function (error: any) {
+			console.log('An error happened');
+		}
+	);
+}
+
 // import ChakraCarousel from './components/custom/ChakraCarousel';
 
 function toDateTime(secs: number) {
@@ -121,6 +160,9 @@ function App({ db }: { db: Firestore }) {
 			});
 			console.log(list);
 			setImgData(list);
+
+			CreateScene();
+
 			// if (docs.size != 0) {
 			// 	console.log(docs.toJSON());
 			// 	setImgData(docs.toJSON());
