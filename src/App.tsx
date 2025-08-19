@@ -26,114 +26,8 @@ import {
 	getDocs,
 } from 'firebase/firestore';
 
-const data = [
-	{
-		year: '2019',
-		images: [
-			{
-				url: 'marchive/Snapchat-1828321928.jpg',
-				comment: '',
-				date: '2019',
-			},
-			{
-				url: 'marchive/Snapchat-1878720354.jpg',
-				comment: '',
-				date: '2019',
-			},
-			{
-				url: 'marchive/Snapchat-1751365845-ANIMATION.gif',
-				comment: 'Vile Marco animation',
-				date: '2019',
-			},
-			{
-				url: 'marchive/Snapchat-1613336237.jpg',
-				comment: '',
-				date: '2019',
-			},
-			{
-				url: 'marchive/Snapchat-1757670789.jpg',
-				comment: '',
-				date: '2019',
-			},
-			{
-				url: 'marchive/Snapchat-1828321928.jpg',
-				comment: '',
-				date: '2019',
-			},
-		],
-	},
-	{
-		year: '2020',
-		images: [
-			{
-				url: 'marchive/Snapchat-1828321928.jpg',
-				comment: '',
-				date: '2020',
-			},
-			{
-				url: 'marchive/Snapchat-1878720354.jpg',
-				comment: '',
-				date: '2020',
-			},
-			{
-				url: 'marchive/Snapchat-1751365845-ANIMATION.gif',
-				comment: '',
-				date: '2020',
-			},
-			{
-				url: 'marchive/Snapchat-1613336237.jpg',
-				comment: '',
-				date: '2020',
-			},
-			{
-				url: 'marchive/Snapchat-1757670789.jpg',
-				comment: '',
-				date: '2020',
-			},
-			{
-				url: 'marchive/Snapchat-1828321928.jpg',
-				comment: '',
-				date: '2020',
-			},
-		],
-	},
-];
-
 // Instantiate a loader
-export function CreateScene() {
-	const scene = new Scene();
-	scene.background = new Color(0xbfe3dd);
-	const loader = new GLTFLoader();
-
-	// Optional: Provide a DRACOLoader instance to decode compressed mesh data
-	const dracoLoader = new DRACOLoader();
-	dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
-	loader.setDRACOLoader(dracoLoader);
-
-	// Load a glTF resource
-	loader.load(
-		// resource URL
-		'models/Pyramid.glb',
-		// called when the resource is loaded
-		function (gltf: any) {
-			scene.add(gltf.scene);
-
-			gltf.animations; // Array<THREE.AnimationClip>
-			gltf.scene; // THREE.Group
-			gltf.scenes; // Array<THREE.Group>
-			gltf.cameras; // Array<THREE.Camera>
-			gltf.asset; // Object
-		},
-		// called while loading is progressing
-		function (xhr: any) {
-			console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-		},
-		// called when loading has errors
-		function (error: any) {
-			console.log('An error happened');
-		}
-	);
-}
+export function CreateScene() {}
 
 // import ChakraCarousel from './components/custom/ChakraCarousel';
 
@@ -152,16 +46,17 @@ function App({ db }: { db: Firestore }) {
 	// Firebase DB setup
 	useEffect(() => {
 		async function init() {
-			const docs = await getDocs(collection(db, 'marcos'));
-			let list: Array<any> = [];
-			docs.forEach((doc) => list.push(doc.data()));
-			list.sort(function (a, b) {
-				return a.date.seconds > b.date.seconds ? 1 : 0;
-			});
-			console.log(list);
-			setImgData(list);
+			// const docs = await getDocs(collection(db, 'marcos'));
+			// let list: Array<any> = [];
+			// docs.forEach((doc) => list.push(doc.data()));
+			// list.sort(function (a, b) {
+			// 	return a.date.seconds > b.date.seconds ? 1 : 0;
+			// });
+			// console.log(list);
 
-			CreateScene();
+			const res = await fetch('/marcomanifest.json');
+			const json = await res.json();
+			setImgData(json);
 
 			// if (docs.size != 0) {
 			// 	console.log(docs.toJSON());
@@ -191,15 +86,13 @@ function App({ db }: { db: Firestore }) {
 					</Button>
 					<Flex gap="8" direction="column">
 						<Box p="4">
-							<h1>
-								{toDateTime(imgData[imgIndex].date.seconds)}
-							</h1>
+							<h1>{toDateTime(imgData[imgIndex].date)}</h1>
 						</Box>
 						<Image
 							fit="contain"
 							h="500px"
 							w="400px"
-							src={imgData[imgIndex].url}
+							src={imgData[imgIndex].original}
 						></Image>
 						<Box p="2">
 							<h4>{imgData[imgIndex].comment}</h4>
@@ -232,37 +125,34 @@ function App({ db }: { db: Firestore }) {
 						</Button>
 					</HStack>
 					<Flex gap="8" direction="column">
-						<For each={data}>
+						{/* <For each={imgData}>
 							{(item) => (
 								<>
 									<Box bgColor="orange" color="black" p="4">
 										{item.year}
-									</Box>
-									<Grid
-										templateColumns={`repeat(${4}, 1fr)`}
-										gap="4"
-									>
-										{' '}
-										{/* 2 for mobile devices seems to be good fit */}
-										<For each={item.images}>
-											{(item) => (
-												<GridItem>
-													<img
-														style={{
-															objectFit: 'cover',
-															width: '180px',
-															height: '180px',
-															borderRadius: '5%',
-														}}
-														src={item.url}
-													></img>
-												</GridItem>
-											)}
-										</For>
-									</Grid>
-								</>
+									</Box> */}
+						<Grid templateColumns={`repeat(${4}, 1fr)`} gap="4">
+							{' '}
+							{/* 2 for mobile devices seems to be good fit */}
+							<For each={imgData}>
+								{(item) => (
+									<GridItem>
+										<img
+											style={{
+												objectFit: 'cover',
+												width: '180px',
+												height: '180px',
+												borderRadius: '5%',
+											}}
+											src={item.original}
+										></img>
+									</GridItem>
+								)}
+							</For>
+						</Grid>
+						{/* </>
 							)}
-						</For>
+						</For> */}
 					</Flex>
 				</>
 			)}

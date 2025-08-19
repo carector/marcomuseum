@@ -9,6 +9,7 @@ const { getAnalytics } = require('firebase/analytics');
 const { initializeAuth } = require('firebase/auth');
 const admin = require('firebase-admin');
 
+const dotenv = 
 require('dotenv').config(); // TODO: Figure out why this is required for anything using .env file
 
 // Firebase setup
