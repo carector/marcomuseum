@@ -14,6 +14,7 @@ import {
 	HStack,
 	Image,
 	Em,
+	SegmentGroup,
 } from '@chakra-ui/react';
 import { Provider } from './components/ui/provider';
 //import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
@@ -88,6 +89,12 @@ function App({ db }: { db: Firestore }) {
 						<Box p="4">
 							<h1>{toDateTime(imgData[imgIndex].date)}</h1>
 						</Box>
+						{imgData[imgIndex].captioned && (
+							<SegmentGroup.Root>
+								<SegmentGroup.Indicator/>
+								<SegmentGroup.Items items={["Original", "With Caption"]} />
+							</SegmentGroup.Root>
+						)}
 						<Image
 							fit="contain"
 							h="500px"
