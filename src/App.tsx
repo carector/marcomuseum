@@ -15,6 +15,8 @@ import {
 	Image,
 	Em,
 	SegmentGroup,
+	IconButton,
+	CloseButton,
 } from '@chakra-ui/react';
 import { Provider } from './components/ui/provider';
 //import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
@@ -127,9 +129,8 @@ function App({ db }: { db: Firestore }) {
 				<>
 					<HStack>
 						<h1>All Marcos</h1>
-						<Button onClick={() => setGridOpen(false)}>
-							Close {/* <CloseIcon /> */}
-						</Button>
+						<CloseButton onClick={() => setGridOpen(false)}>
+						</CloseButton>
 					</HStack>
 					<Flex gap="8" direction="column">
 						{/* <For each={imgData}>
@@ -139,12 +140,11 @@ function App({ db }: { db: Firestore }) {
 										{item.year}
 									</Box> */}
 						<Grid templateColumns={`repeat(${4}, 1fr)`} gap="4">
-							{' '}
 							{/* 2 for mobile devices seems to be good fit */}
 							<For each={imgData}>
-								{(item) => (
+								{(item, index) => (
 									<GridItem>
-										<img
+										<Image
 											style={{
 												objectFit: 'cover',
 												width: '180px',
@@ -152,7 +152,11 @@ function App({ db }: { db: Firestore }) {
 												borderRadius: '5%',
 											}}
 											src={item.original}
-										></img>
+											onClick={() => {
+												setImgIndex(index);
+												setGridOpen(false);
+											}}
+										/>
 									</GridItem>
 								)}
 							</For>
