@@ -19,6 +19,8 @@ import {
 	CloseButton,
 } from '@chakra-ui/react';
 import { Provider } from './components/ui/provider';
+import { Pyramid } from './three/Pyramid.tsx';
+
 //import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
 
 import {
@@ -28,6 +30,8 @@ import {
 	getDoc,
 	getDocs,
 } from 'firebase/firestore';
+import { Canvas } from '@react-three/fiber';
+import { Html, PerspectiveCamera } from '@react-three/drei';
 
 // Instantiate a loader
 export function CreateScene() {}
@@ -75,6 +79,12 @@ function App({ db }: { db: Firestore }) {
 
 	return (
 		<Provider>
+			<Canvas>
+				<Html>
+					<PerspectiveCamera></PerspectiveCamera>
+					<Pyramid/>
+				</Html>
+			</Canvas>
 			{!gridOpen && (
 				<Flex gap="24">
 					<Button
@@ -93,8 +103,10 @@ function App({ db }: { db: Firestore }) {
 						</Box>
 						{imgData[imgIndex].captioned && (
 							<SegmentGroup.Root>
-								<SegmentGroup.Indicator/>
-								<SegmentGroup.Items items={["Original", "With Caption"]} />
+								<SegmentGroup.Indicator />
+								<SegmentGroup.Items
+									items={['Original', 'With Caption']}
+								/>
 							</SegmentGroup.Root>
 						)}
 						<Image
@@ -129,8 +141,9 @@ function App({ db }: { db: Firestore }) {
 				<>
 					<HStack>
 						<h1>All Marcos</h1>
-						<CloseButton onClick={() => setGridOpen(false)}>
-						</CloseButton>
+						<CloseButton
+							onClick={() => setGridOpen(false)}
+						></CloseButton>
 					</HStack>
 					<Flex gap="8" direction="column">
 						{/* <For each={imgData}>

@@ -13,6 +13,8 @@
     "@chakra-ui/react": "^3.24.2",
     "@chakra-ui/system": "^2.6.2",
     "@emotion/react": "^11.14.0",
+    "@react-three/drei": "^10.7.4",
+    "@react-three/fiber": "^9.3.0",
     "axios": "^1.11.0",
     "dotenv": "^17.2.1",
     "firebase": "^12.1.0",
