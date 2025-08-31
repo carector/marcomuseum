@@ -1,10 +1,6 @@
-import { Scene, Color } from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { useEffect, useState } from 'react';
 import './App.css';
 import {
-	AbsoluteCenter,
 	Box,
 	Button,
 	Flex,
@@ -15,28 +11,10 @@ import {
 	Image,
 	Em,
 	SegmentGroup,
-	IconButton,
 	CloseButton,
 } from '@chakra-ui/react';
 import { Provider } from './components/ui/provider';
-import { Pyramid } from './three/Pyramid.tsx';
-
-//import { ChevronRightIcon, ChevronLeftIcon, CloseIcon } from '@chakra-ui/icons';
-
-import {
-	type Firestore,
-	doc,
-	collection,
-	getDoc,
-	getDocs,
-} from 'firebase/firestore';
-import { Canvas } from '@react-three/fiber';
-import { Html, PerspectiveCamera } from '@react-three/drei';
-
-// Instantiate a loader
-export function CreateScene() {}
-
-// import ChakraCarousel from './components/custom/ChakraCarousel';
+import Scene from './three/Scene.tsx';
 
 function toDateTime(secs: number) {
 	var date = new Date(1970, 0, 1); // Epoch
@@ -44,31 +22,18 @@ function toDateTime(secs: number) {
 	return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-function App({ db }: { db: Firestore }) {
+function App() {
 	const [gridOpen, setGridOpen] = useState(false);
 	//const [yearIndex, setYearIndex] = useState(0);
 	const [imgIndex, setImgIndex] = useState(0);
 	const [imgData, setImgData] = useState<ReadonlyArray<any>>([]); // TODO create marco metadata interface
 
-	// Firebase DB setup
+	// Fetch image metadata
 	useEffect(() => {
 		async function init() {
-			// const docs = await getDocs(collection(db, 'marcos'));
-			// let list: Array<any> = [];
-			// docs.forEach((doc) => list.push(doc.data()));
-			// list.sort(function (a, b) {
-			// 	return a.date.seconds > b.date.seconds ? 1 : 0;
-			// });
-			// console.log(list);
-
 			const res = await fetch('/marcomanifest.json');
 			const json = await res.json();
 			setImgData(json);
-
-			// if (docs.size != 0) {
-			// 	console.log(docs.toJSON());
-			// 	setImgData(docs.toJSON());
-			// } else console.log('Error!');
 		}
 		init();
 	}, []);
@@ -78,13 +43,7 @@ function App({ db }: { db: Firestore }) {
 	}
 
 	return (
-		<Provider>
-			<Canvas>
-				<Html>
-					<PerspectiveCamera></PerspectiveCamera>
-					<Pyramid/>
-				</Html>
-			</Canvas>
+		<>
 			{!gridOpen && (
 				<Flex gap="24">
 					<Button
@@ -180,7 +139,7 @@ function App({ db }: { db: Firestore }) {
 					</Flex>
 				</>
 			)}
-		</Provider>
+		</>
 	);
 }
 
