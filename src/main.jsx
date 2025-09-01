@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 //import App from './App.jsx';
 import Scene from './three/Scene.jsx';
-import ScrollHome from './three/ScrollHome.jsx'
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
