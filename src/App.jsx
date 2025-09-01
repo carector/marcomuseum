@@ -13,10 +13,10 @@ import {
 	SegmentGroup,
 	CloseButton,
 } from '@chakra-ui/react';
-import { Provider } from './components/ui/provider';
-import Scene from './three/Scene.tsx';
+import { Provider } from './components/ui/provider.tsx';
+import Scene from './three/Scene.jsx';
 
-function toDateTime(secs: number) {
+function toDateTime(secs) {
 	var date = new Date(1970, 0, 1); // Epoch
 	date.setSeconds(secs);
 	return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
