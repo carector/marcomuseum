@@ -42,7 +42,7 @@ const Scene = () => {
 
 	const viewport = useThree((state) => state.viewport);
 	useLayoutEffect(() => {
-		cameraRef.current.fov = 60;
+		cameraRef.current.fov = 30;
 		cameraRef.current.position.set(0, 4, -1);
 		cameraRef.current.lookAt(new Vector3(0, 6, 50));
 		cameraRef.current.aspect = viewport.width / viewport.height;
@@ -97,13 +97,12 @@ const Scene = () => {
 				distance={50}
 				decay={1}
 			/>
-
 			<Model />
 			{imgData.map((data, index) => {
 				const realIndex = (index + imgIndex) % imgData.length;
 				const pos = -5 * (realIndex - 4);
 				const offset = pos == 0 ? 0 : 1.5 * Math.sign(pos);
-				if (0 > realIndex > 8) return <></>;
+				if (0 > realIndex || realIndex > 8) return <></>;
 				return (
 					<Image
 						zoom={1}
@@ -111,7 +110,7 @@ const Scene = () => {
 						toneMapped
 						rotation={[0, Math.PI, 0]}
 						position={[
-							pos + offset,
+							-pos - offset,
 							realIndex == 4 ? 5 : 3.25,
 							14.5,
 						]}
@@ -121,6 +120,39 @@ const Scene = () => {
 					</Image>
 				);
 			})}
+			{/* Index */}
+			<Html
+				castShadow
+				occlude
+				receiveShadow
+				center
+				position={[0, 10, 13]}
+			>
+				<h1>
+					{imgIndex}/{imgData.length - 1}
+				</h1>
+			</Html>
+			{/* Grid button */}
+			<Html
+				castShadow
+				occlude
+				receiveShadow
+				center
+				position={[3, 10, 13]}
+			>
+				<button onClick={() => {}}>Filters</button>
+			</Html>
+			{/* Fullscreen image button */}
+			<Html
+				castShadow
+				occlude
+				receiveShadow
+				center
+				position={[-3, 10, 13]}
+			>
+				<button onClick={() => {window.open(imgData[(4 + imgIndex) % imgData.length].original)}}>Source</button>
+			</Html>
+			{/* Left arrow */}
 			<Html
 				castShadow
 				occlude
@@ -128,8 +160,15 @@ const Scene = () => {
 				transform
 				position={[3.5, 4, 13]}
 			>
-				<button>⮞</button>
+				<button
+					onClick={() => {
+						decrementIndex();
+					}}
+				>
+					⮞
+				</button>
 			</Html>
+			{/* Right arrow */}
 			<Html
 				castShadow
 				occlude
@@ -137,20 +176,27 @@ const Scene = () => {
 				transform
 				position={[-3.5, 4, 13]}
 			>
-				<button>⮜</button>
+				<button
+					onClick={() => {
+						incrementIndex();
+					}}
+				>
+					⮜
+				</button>
 			</Html>
-			{/* <Html occlude receiveShadow position={[-3.5, 4, 7]}>
-					<iframe
-						width="315"
-						height="200"
-						src="https://www.youtube.com/embed/videoseries?si=gsuz0kyUHqX6-N3E&amp;list=PL9A5z1iPQIu-kNxJAE7faWNa4qgSOF9D3"
-						title="YouTube video player"
-						frameborder="0"
-						allow="autoplay; clipboard-write; encrypted-media"
-						referrerpolicy="strict-origin-when-cross-origin"
-					></iframe>
-				</Html> */}
-			{/* <OrbitControls target={[0, 4, 5]} /> */}
+			{/* Playlist */}
+			<Html occlude receiveShadow position={[-3.5, 4, 7]}>
+				<iframe
+					width="315"
+					height="200"
+					src="https://www.youtube.com/embed/videoseries?si=gsuz0kyUHqX6-N3E&amp;list=PL9A5z1iPQIu-kNxJAE7faWNa4qgSOF9D3"
+					title="YouTube video player"
+					frameborder="0"
+					allow="autoplay; clipboard-write; encrypted-media"
+					referrerpolicy="strict-origin-when-cross-origin"
+				></iframe>
+			</Html>{' '}
+			<OrbitControls target={[0, 4, 5]} />
 		</Suspense>
 	);
 };

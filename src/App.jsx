@@ -26,7 +26,7 @@ function App() {
 	const [gridOpen, setGridOpen] = useState(false);
 	//const [yearIndex, setYearIndex] = useState(0);
 	const [imgIndex, setImgIndex] = useState(0);
-	const [imgData, setImgData] = useState<ReadonlyArray<any>>([]); // TODO create marco metadata interface
+	const [imgData, setImgData] = useState < ReadonlyArray < any >> []; // TODO create marco metadata interface
 
 	// Fetch image metadata
 	useEffect(() => {
