@@ -150,7 +150,7 @@ const Scene = () => {
 				center
 				position={[-3, 10, 13]}
 			>
-				<button onClick={() => {window.open(imgData[(4 + imgIndex) % imgData.length].original)}}>Source</button>
+				<button onClick={() => {window.open(imgData[(4 - imgIndex + imgData.length) % imgData.length].original)}}>Source</button>
 			</Html>
 			{/* Left arrow */}
 			<Html
